@@ -3,25 +3,27 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
 <title>Aura Tools — by Yusta Labs</title>
+<meta name="description" content="Aura Tools: sistema POS para ferreterías y corralones. Punto de venta, presupuestos en PDF, inventario, caja del día y cuenta corriente de clientes — by Yusta Labs.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
-    --bg: #080500;
-    --surface: #151008;
-    --card: #1E1508;
-    --border: #2a1f0a;
-    --orange: #F97316;
+    --bg: #0C1018;
+    --surface: #141B27;
+    --card: #1C2535;
+    --border: #2A3649;
+    --orange: #F59E0B;
     --yellow: #EAB308;
-    --text: #ffffff;
-    --gray4: #9ca3af;
-    --gray5: #6b7280;
+    --text: #E8EDF5;
+    --gray4: #8B9AB5;
+    --gray5: #5A6B85;
     --red: #ef4444;
     --green: #22c55e;
     --blue: #3b82f6;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;font-size:15px;}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;font-size:15px;}
   body{display:flex;flex-direction:column;}
 
   /* ===== LAYOUT ===== */
@@ -33,12 +35,12 @@
   /* ===== SIDEBAR ===== */
   .sidebar-header{padding:20px 16px 16px;border-bottom:1px solid var(--border);}
   .brand{display:flex;align-items:center;gap:10px;}
-  .brand-name{font-size:17px;font-weight:700;color:var(--text);}
+  .brand-name{font-size:17px;font-weight:700;color:var(--text);font-family:'Oswald',sans-serif;letter-spacing:0.05em;text-transform:uppercase;}
   .brand-sub{font-size:10px;color:var(--gray5);margin-top:1px;}
   .nav-section{padding:12px 8px 0;}
   .nav-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;cursor:pointer;color:var(--gray4);font-size:14px;font-weight:500;transition:.15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;}
   .nav-item:hover{background:var(--card);color:var(--text);}
-  .nav-item.active{background:linear-gradient(135deg,rgba(249,115,22,.2),rgba(234,179,8,.1));color:var(--orange);border:1px solid rgba(249,115,22,.25);}
+  .nav-item.active{background:rgba(245,158,11,.15);color:var(--orange);border:1px solid rgba(245,158,11,.3);border-radius:10px;}
   .nav-item svg{flex-shrink:0;}
   .nav-label{font-size:13px;}
 
@@ -55,7 +57,7 @@
 
   /* ===== TOPBAR ===== */
   .topbar{padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between;}
-  .page-title{font-size:20px;font-weight:700;}
+  .page-title{font-size:20px;font-weight:700;font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:0.03em;}
   .page-subtitle{font-size:12px;color:var(--gray5);margin-top:2px;}
 
   /* ===== CARDS ===== */
@@ -66,7 +68,7 @@
   .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
   .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;}
   .kpi-label{font-size:11px;color:var(--gray5);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
-  .kpi-value{font-size:24px;font-weight:700;color:var(--text);}
+  .kpi-value{font-size:24px;font-weight:700;color:var(--text);font-family:'Oswald',sans-serif;font-weight:600;}
   .kpi-sub{font-size:11px;color:var(--gray4);margin-top:4px;}
   .kpi-orange .kpi-value{color:var(--orange);}
   .kpi-yellow .kpi-value{color:var(--yellow);}
@@ -243,7 +245,16 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
         <span class="nav-label">Caja del Día</span>
       </button>
+      <button class="nav-item" onclick="showPage('ordenes')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+        <span class="nav-label">Órdenes de Compra</span>
+      </button>
     </nav>
+    <div style="padding:12px 16px 16px;border-top:1px solid var(--border);margin-top:auto;">
+      <a href="https://yustalabs-web.vercel.app" target="_blank" rel="noopener" style="font-size:11px;color:var(--gray5);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--gray5)'">
+        ⚡ Powered by Yusta Labs
+      </a>
+    </div>
   </aside>
 
   <!-- MAIN -->
@@ -255,10 +266,15 @@
           <div class="page-title">Dashboard</div>
           <div class="page-subtitle" id="dash-date"></div>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="showPage('pos')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Nueva Venta
-        </button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="showPage('pos')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nueva Venta
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="showPage('caja')">
+            💰 Ver Caja del Día
+          </button>
+        </div>
       </div>
       <div style="padding:20px;">
         <div class="kpi-grid" id="kpi-grid"></div>
@@ -271,6 +287,10 @@
             <div class="section-title">Top 5 productos hoy</div>
             <div id="top-products"></div>
           </div>
+        </div>
+        <div class="card" id="dash-low-stock-card" style="margin-bottom:20px;">
+          <div class="section-title">⚠️ Stock Crítico</div>
+          <div id="dash-low-stock"></div>
         </div>
         <div class="card">
           <div class="section-title">Últimas transacciones</div>
@@ -296,6 +316,10 @@
         <!-- Products -->
         <div>
           <div class="card" style="margin-bottom:14px;">
+            <div class="search-wrap" style="margin-bottom:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" class="input" id="pos-barcode-search" placeholder="🔍 Buscar por código (SKU / código de barras)..." oninput="filterByBarcode()" style="padding-left:36px;margin-bottom:0;"/>
+            </div>
             <div class="search-wrap">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <input type="text" class="input" id="product-search" placeholder="Buscar por nombre, código o categoría..." oninput="filterProducts()"/>
@@ -371,6 +395,7 @@
           <div class="page-subtitle" id="inv-count-sub"></div>
         </div>
         <div style="display:flex;gap:8px;">
+          <button class="btn btn-secondary btn-sm" onclick="printPriceList()">🖨️ Lista de Precios</button>
           <button class="btn btn-secondary btn-sm" onclick="openModal('modal-price-update')">% Actualizar Precios</button>
           <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-product')">+ Producto</button>
         </div>
@@ -427,6 +452,24 @@
         </div>
       </div>
     </div>
+    <!-- ÓRDENES DE COMPRA -->
+    <div id="page-ordenes" class="page">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Órdenes de Compra</div>
+          <div class="page-subtitle">Pedidos a proveedores</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-orden')">+ Nueva Orden</button>
+      </div>
+      <div style="padding:20px;">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Proveedor</th><th>Productos</th><th>Total</th><th>Entrega esperada</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="ordenes-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- BOTTOM NAV (mobile) -->
@@ -467,7 +510,7 @@
     </div>
     <div class="form-group">
       <label id="add-cart-qty-label">Cantidad</label>
-      <input type="number" class="input" id="add-cart-qty" value="1" min="0.01" step="0.01"/>
+      <input type="number" class="input" id="add-cart-qty" value="1" min="1" step="0.01"/>
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end;">
       <button class="btn btn-secondary" onclick="closeModal('modal-add-cart')">Cancelar</button>
@@ -545,6 +588,16 @@
       <div class="form-group">
         <label>Stock Mínimo</label>
         <input type="number" class="input" id="prod-stock-min" placeholder="5"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>SKU</label>
+        <input type="text" class="input" id="prod-sku" placeholder="HER-LI10"/>
+      </div>
+      <div class="form-group">
+        <label>Código de barras</label>
+        <input type="text" class="input" id="prod-barcode" placeholder="7790001000060"/>
       </div>
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end;">
@@ -722,6 +775,46 @@
   </div>
 </div>
 
+<!-- Orden de Compra modal -->
+<div class="modal-backdrop" id="modal-add-orden">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-title">
+      <span id="orden-modal-title">Nueva Orden de Compra</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-add-orden')">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Proveedor *</label>
+        <input type="text" class="input" id="orden-proveedor" placeholder="Nombre del proveedor"/>
+      </div>
+      <div class="form-group">
+        <label>Fecha entrega esperada</label>
+        <input type="date" class="input" id="orden-fecha-entrega"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Estado</label>
+      <select class="input select" id="orden-estado">
+        <option value="pendiente">Pendiente</option>
+        <option value="recibida">Recibida</option>
+        <option value="cancelada">Cancelada</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Líneas de pedido</label>
+      <div id="orden-lineas" style="display:grid;gap:8px;margin-bottom:8px;"></div>
+      <button class="btn btn-secondary btn-sm" onclick="addOrdenLinea()">+ Agregar producto</button>
+    </div>
+    <div style="text-align:right;font-size:14px;font-weight:700;margin-bottom:12px;">
+      Total: <span id="orden-total-preview" style="color:var(--orange);">$0</span>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-orden')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveOrden()">Guardar Orden</button>
+    </div>
+  </div>
+</div>
+
 <!-- Print area (hidden, for presupuesto print) -->
 <div id="print-area" style="display:none;"></div>
 
@@ -745,6 +838,8 @@ function loadState() {
   if (!state.presCounter) state.presCounter = 4;
   if (!state.cart) state.cart = [];
   if (!state.selectedPay) state.selectedPay = 'Efectivo';
+  if (!state.ordenesCompra) state.ordenesCompra = [];
+  if (!state.ordenCounter) state.ordenCounter = 1;
 }
 
 function saveState() {
@@ -756,18 +851,18 @@ function saveState() {
 // =========================================================
 function getDefaultProducts() {
   return [
-    {id:'P001',codigo:'P001',nombre:'Tornillos Phillips 8mm × 100u',categoria:'Tornillería',unidad:'caja',costo:1400,precio:2800,stock:45,stockMin:20},
-    {id:'P002',codigo:'P002',nombre:'Caño PVC 110mm × 3m',categoria:'Plomería',unidad:'unidad',costo:2100,precio:4200,stock:28,stockMin:10},
-    {id:'P003',codigo:'P003',nombre:'Pintura Látex Blanca 4L',categoria:'Pinturas',unidad:'unidad',costo:9500,precio:18500,stock:15,stockMin:6},
-    {id:'P004',codigo:'P004',nombre:'Cable Unipolar 2.5mm² (rollo 100m)',categoria:'Electricidad',unidad:'rollo',costo:20000,precio:38000,stock:8,stockMin:3},
-    {id:'P005',codigo:'P005',nombre:'Discos de Corte 115mm × 10u',categoria:'Herramientas',unidad:'caja',costo:2700,precio:5400,stock:32,stockMin:10},
-    {id:'P006',codigo:'P006',nombre:'Llave Inglesa 10"',categoria:'Herramientas',unidad:'unidad',costo:4500,precio:8900,stock:12,stockMin:4},
-    {id:'P007',codigo:'P007',nombre:'Codo PVC 110mm',categoria:'Plomería',unidad:'unidad',costo:420,precio:850,stock:60,stockMin:20},
-    {id:'P008',codigo:'P008',nombre:'Sellador Siliconado 280ml',categoria:'Adhesivos',unidad:'unidad',costo:1100,precio:2200,stock:25,stockMin:10},
-    {id:'P009',codigo:'P009',nombre:'Rejilla de Inspección PVC 150x150',categoria:'Plomería',unidad:'unidad',costo:950,precio:1900,stock:18,stockMin:8},
-    {id:'P010',codigo:'P010',nombre:'Pintura Esmalte Rojo 1L',categoria:'Pinturas',unidad:'litro',costo:3900,precio:7800,stock:10,stockMin:4},
-    {id:'P011',codigo:'P011',nombre:'Interruptor Simple 10A',categoria:'Electricidad',unidad:'unidad',costo:700,precio:1400,stock:40,stockMin:15},
-    {id:'P012',codigo:'P012',nombre:'Tablero 6 Bocas con DIF',categoria:'Electricidad',unidad:'unidad',costo:14000,precio:28000,stock:5,stockMin:2},
+    {id:'P001',codigo:'P001',nombre:'Tornillos Phillips 8mm × 100u',categoria:'Tornillería',unidad:'caja',costo:1400,precio:2800,stock:45,stockMin:20,sku:'TOR-PH8',barcode:'7790001000010'},
+    {id:'P002',codigo:'P002',nombre:'Caño PVC 110mm × 3m',categoria:'Plomería',unidad:'unidad',costo:2100,precio:4200,stock:28,stockMin:10,sku:'PLO-PVC110',barcode:'7790001000020'},
+    {id:'P003',codigo:'P003',nombre:'Pintura Látex Blanca 4L',categoria:'Pinturas',unidad:'unidad',costo:9500,precio:18500,stock:15,stockMin:6,sku:'PIN-LAT4',barcode:'7790001000030'},
+    {id:'P004',codigo:'P004',nombre:'Cable Unipolar 2.5mm² (rollo 100m)',categoria:'Electricidad',unidad:'rollo',costo:20000,precio:38000,stock:8,stockMin:3,sku:'ELE-CAB25',barcode:'7790001000040'},
+    {id:'P005',codigo:'P005',nombre:'Discos de Corte 115mm × 10u',categoria:'Herramientas',unidad:'caja',costo:2700,precio:5400,stock:32,stockMin:10,sku:'HER-DC115',barcode:'7790001000050'},
+    {id:'P006',codigo:'P006',nombre:'Llave Inglesa 10"',categoria:'Herramientas',unidad:'unidad',costo:4500,precio:8900,stock:12,stockMin:4,sku:'HER-LI10',barcode:'7790001000060'},
+    {id:'P007',codigo:'P007',nombre:'Codo PVC 110mm',categoria:'Plomería',unidad:'unidad',costo:420,precio:850,stock:60,stockMin:20,sku:'PLO-COD110',barcode:'7790001000070'},
+    {id:'P008',codigo:'P008',nombre:'Sellador Siliconado 280ml',categoria:'Adhesivos',unidad:'unidad',costo:1100,precio:2200,stock:25,stockMin:10,sku:'ADH-SIL28',barcode:'7790001000080'},
+    {id:'P009',codigo:'P009',nombre:'Rejilla de Inspección PVC 150x150',categoria:'Plomería',unidad:'unidad',costo:950,precio:1900,stock:18,stockMin:8,sku:'PLO-REJ15',barcode:'7790001000090'},
+    {id:'P010',codigo:'P010',nombre:'Pintura Esmalte Rojo 1L',categoria:'Pinturas',unidad:'litro',costo:3900,precio:7800,stock:10,stockMin:4,sku:'PIN-ESM1',barcode:'7790001000100'},
+    {id:'P011',codigo:'P011',nombre:'Interruptor Simple 10A',categoria:'Electricidad',unidad:'unidad',costo:700,precio:1400,stock:40,stockMin:15,sku:'ELE-INT10',barcode:'7790001000110'},
+    {id:'P012',codigo:'P012',nombre:'Tablero 6 Bocas con DIF',categoria:'Electricidad',unidad:'unidad',costo:14000,precio:28000,stock:5,stockMin:2,sku:'ELE-TAB6',barcode:'7790001000120'},
   ];
 }
 
@@ -849,6 +944,7 @@ function renderPage(page) {
   else if (page === 'inventario') renderInventario();
   else if (page === 'clientes') renderClientes();
   else if (page === 'caja') renderCaja();
+  else if (page === 'ordenes') renderOrdenes();
 }
 
 // =========================================================
@@ -907,6 +1003,25 @@ function renderDashboard() {
     </div>
   `).join('');
 
+  // Low stock alert card
+  const lowStockProds = state.products.filter(p => p.stock <= (p.stockMin != null ? p.stockMin : 3));
+  const lowStockHtml = lowStockProds.length ? lowStockProds.map(p => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;">
+      <div>
+        <div style="font-weight:500;color:var(--text);">${p.nombre}</div>
+        <div style="font-size:11px;color:var(--gray5);">${p.categoria} · mín: ${p.stockMin!=null?p.stockMin:3}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-weight:700;color:var(--red);">${p.stock} ${p.unidad}</span>
+        <button class="btn btn-sm btn-secondary" onclick="showPage('inventario');setTimeout(()=>{const el=document.getElementById('inv-search');if(el){el.value='${p.nombre.replace(/'/g,"\\'")}';renderInventario();}},100)">Reponer</button>
+      </div>
+    </div>
+  `).join('') : '<p style="color:var(--gray5);font-size:13px;text-align:center;padding:12px 0;">Sin productos en stock crítico</p>';
+
+  // Populate low-stock card
+  const lsEl = document.getElementById('dash-low-stock');
+  if (lsEl) lsEl.innerHTML = lowStockHtml;
+
   // Top products
   const prodSales = {};
   state.ventas.filter(v=>v.fecha===todayStr).forEach(v=>v.items.forEach(it=>{
@@ -964,12 +1079,33 @@ function filterByCat(cat) {
   filterProducts();
 }
 
+function filterByBarcode() {
+  const q = (document.getElementById('pos-barcode-search')||{value:''}).value.toLowerCase().trim();
+  if (!q) { filterProducts(); return; }
+  const prods = state.products.filter(p =>
+    (p.sku||'').toLowerCase().includes(q) ||
+    (p.barcode||'').toLowerCase().includes(q) ||
+    (p.codigo||'').toLowerCase().includes(q)
+  );
+  document.getElementById('product-list').innerHTML = prods.map(p => `
+    <div class="product-card" onclick="openAddCart('${p.id}')">
+      <div>
+        <div class="product-card-name">${p.nombre}</div>
+        <div class="product-card-meta">${p.codigo}${p.sku?' · SKU: '+p.sku:''}${p.barcode?' · '+p.barcode:''} · Stock: ${p.stock} ${p.unidad}</div>
+      </div>
+      <div class="product-card-price">${fmt(p.precio)}<span style="font-size:10px;color:var(--gray5);">/${p.unidad}</span></div>
+    </div>
+  `).join('') || '<p style="color:var(--gray5);font-size:13px;padding:20px 0;text-align:center;">Sin resultados para ese código</p>';
+}
+
 function filterProducts() {
   const q = document.getElementById('product-search').value.toLowerCase();
   const prods = state.products.filter(p =>
     p.nombre.toLowerCase().includes(q) ||
     p.codigo.toLowerCase().includes(q) ||
-    p.categoria.toLowerCase().includes(q)
+    p.categoria.toLowerCase().includes(q) ||
+    (p.sku||'').toLowerCase().includes(q) ||
+    (p.barcode||'').toLowerCase().includes(q)
   );
   document.getElementById('product-list').innerHTML = prods.map(p => `
     <div class="product-card" onclick="openAddCart('${p.id}')">
@@ -996,7 +1132,13 @@ function confirmAddCart() {
   const qty = parseFloat(document.getElementById('add-cart-qty').value);
   if (!qty || qty <= 0) { toast('Cantidad inválida','error'); return; }
   const p = selectedProductForCart;
+  // Stock validation: sum already-in-cart qty + new qty
   const existing = state.cart.find(i=>i.productoId===p.id);
+  const alreadyInCart = existing ? existing.cantidad : 0;
+  if (qty + alreadyInCart > p.stock) {
+    toast(`Stock insuficiente — disponible: ${p.stock} ${p.unidad}`,'error');
+    return;
+  }
   if (existing) {
     existing.cantidad += qty;
     existing.subtotal = existing.cantidad * existing.precio;
@@ -1016,7 +1158,7 @@ function renderCart() {
         <div class="cart-item-name">${it.nombre}</div>
         <div style="font-size:11px;color:var(--gray5);">${fmt(it.precio)}/${it.unidad}</div>
       </div>
-      <input type="number" class="input cart-item-qty" value="${it.cantidad}" min="0.01" step="0.01"
+      <input type="number" class="input cart-item-qty" value="${it.cantidad}" min="1" step="${it.unidad==='unidad'?'1':'0.01'}"
         style="width:65px;padding:5px 8px;font-size:12px;"
         onchange="updateCartQty(${idx},this.value)"/>
       <div class="cart-item-price">${fmt(it.subtotal)}</div>
@@ -1031,7 +1173,19 @@ function renderCart() {
 
 function updateCartQty(idx, val) {
   const qty = parseFloat(val);
-  if (!qty || qty <= 0) return;
+  if (!qty || qty <= 0) {
+    // Remove item if qty set to 0 or negative
+    state.cart.splice(idx, 1);
+    renderCart();
+    toast('Producto quitado del carrito','error');
+    return;
+  }
+  if (qty < 1 && state.cart[idx] && state.cart[idx].unidad === 'unidad') {
+    state.cart[idx].cantidad = 1;
+    state.cart[idx].subtotal = state.cart[idx].precio;
+    renderCart();
+    return;
+  }
   state.cart[idx].cantidad = qty;
   state.cart[idx].subtotal = qty * state.cart[idx].precio;
   renderCart();
@@ -1087,6 +1241,15 @@ function processSale() {
 
   if (pay === 'Cuenta Corriente') {
     if (!clienteId) { toast('Seleccioná un cliente para Cta. Cte.','error'); return; }
+    // Credit limit warning (non-blocking)
+    if (cliente.limite > 0 && (cliente.saldo + total) > cliente.limite) {
+      const nuevoSaldo = fmt(cliente.saldo + total);
+      const limite = fmt(cliente.limite);
+      toast(`⚠️ Límite excedido: saldo quedaría en ${nuevoSaldo} (límite ${limite})`, 'error');
+      // Show persistent warning but allow the sale to continue after 3s
+      const continuar = confirm(`⚠️ Esta venta excede el límite de crédito de ${cliente.nombre}.\n\nSaldo actual: ${fmt(cliente.saldo)}\nEsta venta: ${fmt(total)}\nNuevo saldo: ${nuevoSaldo}\nLímite: ${limite}\n\n¿Confirmar igual?`);
+      if (!continuar) return;
+    }
     cliente.saldo += total;
     cliente.historial.push({fecha:today,tipo:'compra',descripcion:'Venta POS',monto:total});
   }
@@ -1115,7 +1278,18 @@ function processSale() {
 // =========================================================
 let currentPresId = null;
 
+function recalcPresupuesto(p) {
+  // Recalculate each line subtotal and overall total from items
+  p.items.forEach(it => {
+    it.subtotal = (parseFloat(it.cantidad) || 0) * (parseFloat(it.precio) || 0);
+  });
+  p.total = p.items.reduce((a, it) => a + it.subtotal, 0);
+}
+
 function renderPresupuestos() {
+  // Recalculate all presupuesto totals to fix any stale stored values
+  state.presupuestos.forEach(recalcPresupuesto);
+
   const pendientes = state.presupuestos.filter(p=>p.estado==='pendiente').length;
   document.getElementById('pres-count-sub').textContent = `${state.presupuestos.length} total · ${pendientes} pendientes`;
 
@@ -1435,6 +1609,8 @@ function editProduct(prodId) {
   document.getElementById('prod-precio').value = p.precio;
   document.getElementById('prod-stock').value = p.stock;
   document.getElementById('prod-stock-min').value = p.stockMin;
+  document.getElementById('prod-sku').value = p.sku||'';
+  document.getElementById('prod-barcode').value = p.barcode||'';
   openModal('modal-add-product');
 }
 
@@ -1450,6 +1626,8 @@ function saveProduct() {
     precio: parseFloat(document.getElementById('prod-precio').value)||0,
     stock: parseFloat(document.getElementById('prod-stock').value)||0,
     stockMin: parseFloat(document.getElementById('prod-stock-min').value)||5,
+    sku: document.getElementById('prod-sku').value.trim(),
+    barcode: document.getElementById('prod-barcode').value.trim(),
   };
 
   if (editingProductId) {
@@ -1467,7 +1645,47 @@ function saveProduct() {
   closeModal('modal-add-product');
   renderInventario();
   // clear fields
-  ['prod-codigo','prod-nombre','prod-costo','prod-precio','prod-stock','prod-stock-min'].forEach(id=>document.getElementById(id).value='');
+  ['prod-codigo','prod-nombre','prod-costo','prod-precio','prod-stock','prod-stock-min','prod-sku','prod-barcode'].forEach(id=>document.getElementById(id).value='');
+}
+
+function printPriceList() {
+  const sorted = [...state.products].sort((a,b) => a.categoria.localeCompare(b.categoria) || a.nombre.localeCompare(b.nombre));
+  const rows = sorted.map(p => `
+    <tr>
+      <td>${p.nombre}</td>
+      <td>${p.categoria}</td>
+      <td style="text-align:right;font-weight:600;">$${Number(p.precio).toLocaleString('es-AR')}</td>
+      <td style="text-align:right;">${p.stock} ${p.unidad}</td>
+    </tr>
+  `).join('');
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Lista de Precios — Aura Tools</title>
+  <style>
+    body{font-family:Arial,sans-serif;color:#111;padding:32px;max-width:860px;margin:auto;}
+    h1{color:#F97316;margin:0;font-size:26px;}
+    .sub{font-size:12px;color:#666;margin-bottom:24px;}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #F97316;}
+    table{width:100%;border-collapse:collapse;margin-top:8px;}
+    th{background:#F97316;color:#fff;padding:9px 12px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+    th:nth-child(3),th:nth-child(4){text-align:right;}
+    td{padding:8px 12px;border-bottom:1px solid #eee;font-size:13px;}
+    tr:nth-child(even) td{background:#fafafa;}
+    .footer{margin-top:20px;font-size:11px;color:#aaa;text-align:center;}
+    @media print{body{padding:16px;}}
+  </style></head><body>
+  <div class="header">
+    <div><h1>Aura Tools</h1><div class="sub">by Yusta Labs &nbsp;·&nbsp; Lista de Precios</div></div>
+    <div style="font-size:12px;color:#666;">Fecha: ${new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})}</div>
+  </div>
+  <table>
+    <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <div class="footer">Generado por Aura Tools — Yusta Labs</div>
+  </body></html>`);
+  win.document.close();
+  win.print();
 }
 
 function applyPriceUpdate() {
@@ -1666,6 +1884,114 @@ function saveGasto() {
   toast('Gasto registrado','success');
   document.getElementById('gasto-concepto').value='';
   document.getElementById('gasto-monto').value='';
+}
+
+// =========================================================
+// ÓRDENES DE COMPRA
+// =========================================================
+let ordenLineas = [];
+
+function renderOrdenes() {
+  const tbody = document.getElementById('ordenes-tbody');
+  if (!tbody) return;
+  if (!state.ordenesCompra.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray5);padding:24px;">Sin órdenes registradas</td></tr>';
+    return;
+  }
+  const estadoBadge = e => {
+    if (e === 'pendiente') return '<span class="badge badge-yellow">Pendiente</span>';
+    if (e === 'recibida') return '<span class="badge badge-green">Recibida</span>';
+    return '<span class="badge badge-red">Cancelada</span>';
+  };
+  tbody.innerHTML = state.ordenesCompra.map(o => `
+    <tr>
+      <td style="font-weight:700;color:var(--orange);">${o.id}</td>
+      <td style="font-weight:500;">${o.proveedor}</td>
+      <td style="color:var(--gray4);">${o.lineas.length} producto${o.lineas.length!==1?'s':''}</td>
+      <td style="font-weight:600;">${fmt(o.total)}</td>
+      <td style="color:var(--gray5);">${o.fechaEntrega||'—'}</td>
+      <td>${estadoBadge(o.estado)}</td>
+      <td>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost btn-sm" onclick="cambiarEstadoOrden('${o.id}','recibida')" ${o.estado!=='pendiente'?'disabled style="opacity:.4"':''}>✓ Recibida</button>
+          <button class="btn btn-danger btn-sm" onclick="cambiarEstadoOrden('${o.id}','cancelada')" ${o.estado!=='pendiente'?'disabled style="opacity:.4"':''}>✕</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function addOrdenLinea() {
+  ordenLineas.push({producto:'', cantidad:1, precioUnitario:0});
+  renderOrdenLineas();
+}
+
+function renderOrdenLineas() {
+  const prodOptions = state.products.map(p => `<option value="${p.nombre}">${p.nombre}</option>`).join('');
+  document.getElementById('orden-lineas').innerHTML = ordenLineas.map((l, i) => `
+    <div style="display:grid;grid-template-columns:1fr 80px 120px 30px;gap:6px;align-items:center;">
+      <select class="input select" onchange="ordenLineas[${i}].producto=this.value;calcOrdenTotal()">
+        <option value="">-- Producto --</option>${prodOptions}
+      </select>
+      <input type="number" class="input" placeholder="Cant." value="${l.cantidad}" min="1"
+        onchange="ordenLineas[${i}].cantidad=parseFloat(this.value)||1;calcOrdenTotal()"/>
+      <input type="number" class="input" placeholder="P. Unit." value="${l.precioUnitario||''}"
+        onchange="ordenLineas[${i}].precioUnitario=parseFloat(this.value)||0;calcOrdenTotal()"/>
+      <button class="btn btn-ghost btn-sm" style="color:var(--red);padding:4px;" onclick="ordenLineas.splice(${i},1);renderOrdenLineas()">✕</button>
+    </div>
+  `).join('');
+  calcOrdenTotal();
+}
+
+function calcOrdenTotal() {
+  const total = ordenLineas.reduce((a,l) => a + (l.cantidad * l.precioUnitario), 0);
+  const el = document.getElementById('orden-total-preview');
+  if (el) el.textContent = fmt(total);
+}
+
+function saveOrden() {
+  const proveedor = document.getElementById('orden-proveedor').value.trim();
+  if (!proveedor) { toast('Ingresá el proveedor','error'); return; }
+  if (!ordenLineas.length) { toast('Agregá al menos un producto','error'); return; }
+  const total = ordenLineas.reduce((a,l) => a + (l.cantidad * l.precioUnitario), 0);
+  const orden = {
+    id: 'OC-' + String(state.ordenCounter).padStart(4,'0'),
+    proveedor,
+    fechaEntrega: document.getElementById('orden-fecha-entrega').value || '',
+    estado: document.getElementById('orden-estado').value,
+    lineas: ordenLineas.map(l => ({...l})),
+    total,
+    fecha: new Date().toISOString().split('T')[0],
+  };
+  state.ordenCounter++;
+  state.ordenesCompra.unshift(orden);
+  ordenLineas = [];
+  saveState();
+  closeModal('modal-add-orden');
+  renderOrdenes();
+  toast(`Orden ${orden.id} creada`,'success');
+  document.getElementById('orden-proveedor').value = '';
+  document.getElementById('orden-fecha-entrega').value = '';
+  document.getElementById('orden-lineas').innerHTML = '';
+  document.getElementById('orden-total-preview').textContent = '$0';
+}
+
+function cambiarEstadoOrden(id, estado) {
+  const o = state.ordenesCompra.find(x => x.id === id);
+  if (!o || o.estado !== 'pendiente') return;
+  o.estado = estado;
+  if (estado === 'recibida') {
+    // Auto-increment stock for received items
+    o.lineas.forEach(l => {
+      const p = state.products.find(pr => pr.nombre === l.producto);
+      if (p) p.stock += l.cantidad;
+    });
+    toast(`Orden ${id} recibida — stock actualizado`,'success');
+  } else {
+    toast(`Orden ${id} cancelada`,'error');
+  }
+  saveState();
+  renderOrdenes();
 }
 
 // =========================================================
