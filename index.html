@@ -460,9 +460,10 @@
           <div class="page-title">Órdenes de Compra</div>
           <div class="page-subtitle">Pedidos a proveedores</div>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-orden')">+ Nueva Orden</button>
+        <button class="btn btn-primary btn-sm" onclick="ordenLineas=[];renderOrdenLineas();openModal('modal-add-orden')">+ Nueva Orden</button>
       </div>
       <div style="padding:20px;">
+        <div class="kpi-grid" id="ordenes-kpis" style="margin-bottom:20px;"></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>#</th><th>Proveedor</th><th>Productos</th><th>Total</th><th>Entrega esperada</th><th>Estado</th><th>Acciones</th></tr></thead>
@@ -839,8 +840,8 @@ function loadState() {
   if (!state.presCounter) state.presCounter = 4;
   if (!state.cart) state.cart = [];
   if (!state.selectedPay) state.selectedPay = 'Efectivo';
-  if (!state.ordenesCompra) state.ordenesCompra = [];
-  if (!state.ordenCounter) state.ordenCounter = 1;
+  if (!state.ordenesCompra) state.ordenesCompra = getDefaultOrdenes();
+  if (!state.ordenCounter) state.ordenCounter = 4;
 }
 
 function saveState() {
@@ -906,6 +907,29 @@ function getDefaultPresupuestos() {
       {productoId:'P012',nombre:'Tablero 6 Bocas con DIF',cantidad:3,unidad:'unidad',precio:28000,subtotal:84000},
       {productoId:'P004',nombre:'Cable Unipolar 2.5mm²',cantidad:3,unidad:'rollo',precio:38000,subtotal:114000},
     ],total:198000,notas:'Aprobado por el cliente el 01/04.'},
+  ];
+}
+
+function getDefaultOrdenes() {
+  const today = new Date();
+  const fmt2 = d => d.toISOString().split('T')[0];
+  const addDays = (d,n) => { const r=new Date(d); r.setDate(r.getDate()+n); return r; };
+  return [
+    {id:'OC-0001',proveedor:'Distribuidora Tramontina SA',fechaEntrega:fmt2(addDays(today,5)),estado:'pendiente',fecha:fmt2(addDays(today,-2)),
+      lineas:[
+        {producto:'Llave Inglesa 10"',cantidad:10,precioUnitario:4500},
+        {producto:'Discos de Corte 115mm × 10u',cantidad:20,precioUnitario:2700},
+      ],total:99000},
+    {id:'OC-0002',proveedor:'Pinturas Sinteplast Argentina',fechaEntrega:fmt2(addDays(today,3)),estado:'pendiente',fecha:fmt2(addDays(today,-1)),
+      lineas:[
+        {producto:'Pintura Látex Blanca 4L',cantidad:12,precioUnitario:9500},
+        {producto:'Pintura Esmalte Rojo 1L',cantidad:8,precioUnitario:3900},
+      ],total:145200},
+    {id:'OC-0003',proveedor:'Stanley Black & Decker Argentina',fechaEntrega:fmt2(addDays(today,-3)),estado:'recibida',fecha:fmt2(addDays(today,-8)),
+      lineas:[
+        {producto:'Sellador Siliconado 280ml',cantidad:30,precioUnitario:1100},
+        {producto:'Interruptor Simple 10A',cantidad:50,precioUnitario:700},
+      ],total:68000},
   ];
 }
 
@@ -1050,8 +1074,10 @@ function renderDashboard() {
 }
 
 function stateBadge(s) {
-  const map = {pendiente:'badge-yellow',aceptado:'badge-green',rechazado:'badge-red',facturado:'badge-blue',Efectivo:'badge-green',Transferencia:'badge-blue',Tarjeta:'badge-orange',
-    'Cuenta Corriente':'badge-gray','Presupuesto':'badge-yellow'};
+  const map = {pendiente:'badge-yellow',aceptado:'badge-green',rechazado:'badge-red',facturado:'badge-blue',
+    Efectivo:'badge-green',Transferencia:'badge-blue',Tarjeta:'badge-orange',
+    'Cuenta Corriente':'badge-gray','Presupuesto':'badge-yellow',
+    vigente:'badge-green',saldada:'badge-blue',vencida:'badge-red',pago:'badge-blue'};
   return `<span class="badge ${map[s]||'badge-gray'}">${s}</span>`;
 }
 
@@ -1100,7 +1126,8 @@ function filterByBarcode() {
 }
 
 function filterProducts() {
-  const q = document.getElementById('product-search').value.toLowerCase();
+  const searchEl = document.getElementById('product-search');
+  const q = searchEl ? searchEl.value.toLowerCase() : '';
   const prods = state.products.filter(p =>
     p.nombre.toLowerCase().includes(q) ||
     p.codigo.toLowerCase().includes(q) ||
@@ -1174,7 +1201,7 @@ function renderCart() {
 
 function updateCartQty(idx, val) {
   const qty = parseFloat(val);
-  if (!qty || qty <= 0) {
+  if (isNaN(qty) || qty <= 0) {
     // Remove item if qty set to 0 or negative
     state.cart.splice(idx, 1);
     renderCart();
@@ -1299,8 +1326,8 @@ function renderPresupuestos() {
       <td style="font-weight:700;color:var(--orange);">${p.id}</td>
       <td>${p.clienteNombre}</td>
       <td style="font-weight:600;">${fmt(p.total)}</td>
-      <td style="color:var(--gray4);">${p.fecha}</td>
-      <td style="color:var(--gray5);">${p.validez}</td>
+      <td style="color:var(--gray4);">${fmtFecha(p.fecha)}</td>
+      <td style="color:var(--gray5);">${fmtFecha(p.validez)}</td>
       <td>${stateBadge(p.estado)}</td>
       <td>
         <button class="btn btn-ghost btn-sm" onclick="openPresDetail('${p.id}')">Ver</button>
@@ -1321,8 +1348,8 @@ function openPresDetail(id) {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
       <div><label>Cliente</label><p style="font-weight:600;">${p.clienteNombre}</p></div>
       <div><label>Estado</label><p>${stateBadge(p.estado)}</p></div>
-      <div><label>Fecha</label><p>${p.fecha}</p></div>
-      <div><label>Válido hasta</label><p>${p.validez}</p></div>
+      <div><label>Fecha</label><p>${fmtFecha(p.fecha)}</p></div>
+      <div><label>Válido hasta</label><p>${fmtFecha(p.validez)}</p></div>
     </div>
     <div class="table-wrap">
       <table>
@@ -1581,6 +1608,7 @@ function renderInventario() {
 function openStockAdj(prodId) {
   stockAdjProductId = prodId;
   const p = state.products.find(x=>x.id===prodId);
+  if (!p) return;
   document.getElementById('stock-modal-title').textContent = `Ajuste: ${p.nombre}`;
   document.getElementById('stock-qty').value = 10;
   openModal('modal-stock');
@@ -1589,7 +1617,7 @@ function openStockAdj(prodId) {
 function confirmStockAdj() {
   const p = state.products.find(x=>x.id===stockAdjProductId);
   const qty = parseInt(document.getElementById('stock-qty').value);
-  if (!p||!qty||qty<0) return;
+  if (!p || isNaN(qty) || qty <= 0) { toast('Cantidad inválida','error'); return; }
   p.stock += qty;
   saveState();
   closeModal('modal-stock');
@@ -1714,7 +1742,7 @@ let currentClienteId = null;
 
 function renderClientes() {
   document.getElementById('clientes-grid').innerHTML = state.clientes.map(c => {
-    const pct = c.limite > 0 ? Math.min(100, (c.saldo/c.limite)*100) : 0;
+    const pct = (c.limite > 0 && c.saldo >= 0) ? Math.min(100, (c.saldo / c.limite) * 100) : 0;
     const barColor = c.estado==='vencida' ? 'var(--red)' : pct>80 ? 'var(--yellow)' : 'var(--green)';
     return `<div class="card" style="cursor:pointer;" onclick="openClienteDetail('${c.id}')">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
@@ -1772,7 +1800,7 @@ function openClienteDetail(id) {
       <div class="history-item">
         <div>
           <div style="font-weight:500;">${h.descripcion}</div>
-          <div style="font-size:11px;color:var(--gray5);">${h.fecha}</div>
+          <div style="font-size:11px;color:var(--gray5);">${fmtFecha(h.fecha)}</div>
         </div>
         <div style="font-weight:700;color:${h.tipo==='pago'?'var(--green)':'var(--orange)'};">${h.tipo==='pago'?'-':''}${fmt(Math.abs(h.monto))}</div>
       </div>
@@ -1784,6 +1812,7 @@ function openClienteDetail(id) {
 function openPagoCC(id) {
   currentClienteId = id;
   const c = state.clientes.find(x=>x.id===id);
+  if (!c) return;
   document.getElementById('pago-cc-title').textContent = `Registrar Pago — ${c.nombre}`;
   document.getElementById('pago-cc-monto').value = '';
   openModal('modal-pago-cc');
@@ -1895,6 +1924,20 @@ let ordenLineas = [];
 function renderOrdenes() {
   const tbody = document.getElementById('ordenes-tbody');
   if (!tbody) return;
+
+  // KPIs
+  const kpisEl = document.getElementById('ordenes-kpis');
+  if (kpisEl) {
+    const pendientes = state.ordenesCompra.filter(o=>o.estado==='pendiente');
+    const recibidas  = state.ordenesCompra.filter(o=>o.estado==='recibida');
+    const totalPend  = pendientes.reduce((a,o)=>a+o.total,0);
+    kpisEl.innerHTML = `
+      <div class="kpi-card kpi-yellow"><div class="kpi-label">Órdenes pendientes</div><div class="kpi-value">${pendientes.length}</div><div class="kpi-sub">${fmt(totalPend)} comprometidos</div></div>
+      <div class="kpi-card kpi-green"><div class="kpi-label">Recibidas</div><div class="kpi-value">${recibidas.length}</div><div class="kpi-sub">órdenes completadas</div></div>
+      <div class="kpi-card kpi-orange"><div class="kpi-label">Total órdenes</div><div class="kpi-value">${state.ordenesCompra.length}</div><div class="kpi-sub">historial completo</div></div>
+    `;
+  }
+
   if (!state.ordenesCompra.length) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray5);padding:24px;">Sin órdenes registradas</td></tr>';
     return;
@@ -1910,7 +1953,7 @@ function renderOrdenes() {
       <td style="font-weight:500;">${o.proveedor}</td>
       <td style="color:var(--gray4);">${o.lineas.length} producto${o.lineas.length!==1?'s':''}</td>
       <td style="font-weight:600;">${fmt(o.total)}</td>
-      <td style="color:var(--gray5);">${o.fechaEntrega||'—'}</td>
+      <td style="color:var(--gray5);">${o.fechaEntrega ? fmtFecha(o.fechaEntrega) : '—'}</td>
       <td>${estadoBadge(o.estado)}</td>
       <td>
         <div style="display:flex;gap:6px;">
@@ -1999,11 +2042,21 @@ function cambiarEstadoOrden(id, estado) {
 // UTILS
 // =========================================================
 function fmt(n) {
-  return '$' + (n||0).toLocaleString('es-AR', {minimumFractionDigits:0, maximumFractionDigits:0});
+  const num = parseFloat(n);
+  if (isNaN(num)) return '$0';
+  return '$' + num.toLocaleString('es-AR', {minimumFractionDigits:0, maximumFractionDigits:0});
 }
 function fmtK(n) {
-  if (n >= 1000) return '$' + (n/1000).toFixed(0) + 'k';
-  return fmt(n);
+  const num = parseFloat(n);
+  if (isNaN(num) || num === 0) return '$0';
+  if (num >= 1000) return '$' + (num/1000).toFixed(0) + 'k';
+  return fmt(num);
+}
+function fmtFecha(iso) {
+  if (!iso) return '—';
+  const parts = iso.split('-');
+  if (parts.length !== 3) return iso;
+  return parts[2] + '/' + parts[1] + '/' + parts[0];
 }
 function toast(msg, type='success') {
   const el = document.getElementById('toast');
@@ -2012,8 +2065,8 @@ function toast(msg, type='success') {
   clearTimeout(el._t);
   el._t = setTimeout(() => el.className = '', 2800);
 }
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openModal(id) { const el=document.getElementById(id); if(el) el.classList.add('open'); }
+function closeModal(id) { const el=document.getElementById(id); if(el) el.classList.remove('open'); }
 
 // Close modal on backdrop click
 document.querySelectorAll('.modal-backdrop').forEach(el => {
