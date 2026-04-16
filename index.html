@@ -1201,14 +1201,19 @@ function renderCart() {
 
 function updateCartQty(idx, val) {
   const qty = parseFloat(val);
-  if (isNaN(qty) || qty <= 0) {
-    // Remove item if qty set to 0 or negative
+  if (isNaN(qty) || qty < 0) {
+    toast('Cantidad inválida — debe ser mayor a cero','error');
+    renderCart();
+    return;
+  }
+  if (qty === 0) {
     state.cart.splice(idx, 1);
     renderCart();
     toast('Producto quitado del carrito','error');
     return;
   }
   if (qty < 1 && state.cart[idx] && state.cart[idx].unidad === 'unidad') {
+    toast('Cantidad mínima es 1 para unidades enteras','error');
     state.cart[idx].cantidad = 1;
     state.cart[idx].subtotal = state.cart[idx].precio;
     renderCart();
@@ -1248,7 +1253,8 @@ function processSale() {
   if (pay === 'Presupuesto') {
     const clienteId = document.getElementById('pos-cliente').value;
     const cliente = clienteId ? state.clientes.find(c=>c.id===clienteId) : null;
-    const num = 'P-' + String(state.presCounter).padStart(4,'0');
+    const year = new Date().getFullYear();
+    const num = 'PRES-' + year + '-' + String(state.presCounter).padStart(4,'0');
     state.presCounter++;
     const validez = new Date(); validez.setDate(validez.getDate()+30);
     const pres = {
@@ -1408,7 +1414,8 @@ function rechazarPresupuesto() {
 function duplicarPresupuesto() {
   const p = state.presupuestos.find(x=>x.id===currentPresId);
   if (!p) return;
-  const num = 'P-' + String(state.presCounter).padStart(4,'0');
+  const year = new Date().getFullYear();
+  const num = 'PRES-' + year + '-' + String(state.presCounter).padStart(4,'0');
   state.presCounter++;
   const today = new Date().toISOString().split('T')[0];
   const validez = new Date(); validez.setDate(validez.getDate()+30);
