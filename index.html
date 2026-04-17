@@ -3,27 +3,37 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <title>Aura Tools — by Yusta Labs</title>
 <meta name="description" content="Aura Tools: sistema POS para ferreterías y corralones. Punto de venta, presupuestos en PDF, inventario, caja del día y cuenta corriente de clientes — by Yusta Labs.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
-    --bg: #0C1018;
-    --surface: #141B27;
-    --card: #1C2535;
-    --border: #2A3649;
-    --orange: #F59E0B;
-    --yellow: #EAB308;
-    --text: #E8EDF5;
-    --gray4: #8B9AB5;
-    --gray5: #5A6B85;
-    --red: #ef4444;
-    --green: #22c55e;
-    --blue: #3b82f6;
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --card: #FFFFFF;
+    --surface2: #F0EDE8;
+    --border: #E5DDD6;
+    --border-strong: #C9BDB4;
+    --primary: #B8751A;
+    --primary-dark: #8A5510;
+    --primary-light: #FDF0E0;
+    --accent: #2D5F7A;
+    --orange: #B8751A;
+    --yellow: #B8751A;
+    --text: #1A1512;
+    --gray4: #9E8E82;
+    --gray5: #C9BDB4;
+    --text-secondary: #6B5E52;
+    --muted: #9E8E82;
+    --red: #C0392B;
+    --green: #2D7A44;
+    --blue: #1A5FAD;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.09);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;font-size:15px;}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;}
   body{display:flex;flex-direction:column;}
 
   /* ===== LAYOUT ===== */
@@ -35,13 +45,13 @@
   /* ===== SIDEBAR ===== */
   .sidebar-header{padding:20px 16px 16px;border-bottom:1px solid var(--border);}
   .brand{display:flex;align-items:center;gap:10px;}
-  .brand-name{font-size:17px;font-weight:700;color:var(--text);font-family:'Oswald',sans-serif;letter-spacing:0.05em;text-transform:uppercase;}
-  .brand-sub{font-size:10px;color:var(--gray5);margin-top:1px;}
+  .brand-name{font-size:17px;font-weight:700;color:var(--primary);font-family:'Inter',sans-serif;letter-spacing:0.02em;}
+  .brand-sub{font-size:10px;color:var(--gray4);margin-top:1px;}
   .nav-section{padding:12px 8px 0;}
-  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;cursor:pointer;color:var(--gray4);font-size:14px;font-weight:500;transition:.15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;}
-  .nav-item:hover{background:var(--card);color:var(--text);}
-  .nav-item.active{background:rgba(245,158,11,.15);color:var(--orange);border:1px solid rgba(245,158,11,.3);border-radius:10px;}
-  .nav-item svg{flex-shrink:0;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:8px;cursor:pointer;color:var(--gray4);font-size:13px;font-weight:500;transition:.15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent;}
+  .nav-item:hover{background:var(--surface2);color:var(--text);}
+  .nav-item.active{background:var(--primary-light);color:var(--primary);border-left-color:var(--primary);border-radius:8px;font-weight:600;}
+  .nav-item svg{flex-shrink:0;opacity:.8;}
   .nav-label{font-size:13px;}
 
   /* ===== BOTTOM NAV ===== */
@@ -57,24 +67,24 @@
 
   /* ===== TOPBAR ===== */
   .topbar{padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between;}
-  .page-title{font-size:20px;font-weight:700;font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:0.03em;}
-  .page-subtitle{font-size:12px;color:var(--gray5);margin-top:2px;}
+  .page-title{font-size:20px;font-weight:700;font-family:'Inter',sans-serif;color:var(--text);}
+  .page-subtitle{font-size:12px;color:var(--gray4);margin-top:2px;}
 
   /* ===== CARDS ===== */
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;}
-  .card-sm{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow-sm);}
+  .card-sm{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;box-shadow:var(--shadow-sm);}
 
   /* ===== KPI GRID ===== */
   .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
-  .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;}
-  .kpi-label{font-size:11px;color:var(--gray5);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
-  .kpi-value{font-size:24px;font-weight:700;color:var(--text);font-family:'Oswald',sans-serif;font-weight:600;}
+  .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow-sm);}
+  .kpi-label{font-size:11px;color:var(--gray4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+  .kpi-value{font-size:24px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;}
   .kpi-sub{font-size:11px;color:var(--gray4);margin-top:4px;}
-  .kpi-orange .kpi-value{color:var(--orange);}
-  .kpi-yellow .kpi-value{color:var(--yellow);}
+  .kpi-orange .kpi-value{color:var(--primary);}
+  .kpi-yellow .kpi-value{color:var(--primary);}
   .kpi-red .kpi-value{color:var(--red);}
   .kpi-green .kpi-value{color:var(--green);}
-  .kpi-blue .kpi-value{color:var(--blue,#3b82f6);}
+  .kpi-blue .kpi-value{color:var(--blue);}
 
   /* ===== GRID LAYOUTS ===== */
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -86,87 +96,98 @@
   /* ===== TABLES ===== */
   .table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);}
   table{width:100%;border-collapse:collapse;background:var(--card);}
-  th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--gray5);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);white-space:nowrap;}
-  td{padding:11px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+  th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--gray4);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--surface2);}
+  td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--text);}
   tr:last-child td{border-bottom:none;}
-  tr:hover td{background:rgba(249,115,22,.04);}
+  tr:hover td{background:var(--surface2);}
 
   /* ===== BADGES ===== */
   .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
-  .badge-green{background:rgba(34,197,94,.15);color:var(--green);}
-  .badge-red{background:rgba(239,68,68,.15);color:var(--red);}
-  .badge-yellow{background:rgba(234,179,8,.15);color:var(--yellow);}
-  .badge-orange{background:rgba(249,115,22,.15);color:var(--orange);}
-  .badge-blue{background:rgba(59,130,246,.15);color:var(--blue);}
-  .badge-gray{background:rgba(107,114,128,.15);color:var(--gray4);}
+  .badge-green{background:#EBF5EE;color:var(--green);}
+  .badge-red{background:#FDECEB;color:var(--red);}
+  .badge-yellow{background:var(--primary-light);color:var(--primary);}
+  .badge-orange{background:var(--primary-light);color:var(--primary);}
+  .badge-blue{background:#EBF2FD;color:var(--blue);}
+  .badge-gray{background:var(--surface2);color:var(--gray4);}
 
   /* ===== BUTTONS ===== */
-  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:.15s;}
-  .btn-primary{background:var(--orange);color:#fff;}
-  .btn-primary:hover{background:#ea6a0e;}
-  .btn-secondary{background:var(--card);border:1px solid var(--border);color:var(--gray4);}
-  .btn-secondary:hover{border-color:var(--orange);color:var(--orange);}
-  .btn-ghost{background:transparent;color:var(--gray4);padding:6px 10px;}
-  .btn-ghost:hover{color:var(--orange);}
-  .btn-sm{padding:5px 11px;font-size:12px;border-radius:7px;}
-  .btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.25);}
-  .btn-success{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.25);}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:.15s;font-family:'Inter',sans-serif;}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-primary:hover{background:var(--primary-dark);}
+  .btn-secondary{background:transparent;border:1px solid var(--border);color:var(--gray4);}
+  .btn-secondary:hover{border-color:var(--primary);color:var(--primary);}
+  .btn-ghost{background:transparent;color:var(--gray4);padding:6px 10px;border:none;}
+  .btn-ghost:hover{color:var(--primary);}
+  .btn-sm{padding:5px 11px;font-size:12px;border-radius:6px;}
+  .btn-danger{background:#FDECEB;color:var(--red);border:1px solid rgba(192,57,43,.2);}
+  .btn-success{background:#EBF5EE;color:var(--green);border:1px solid rgba(45,122,68,.2);}
 
   /* ===== INPUTS ===== */
-  .input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text);padding:10px 13px;font-size:14px;outline:none;transition:.15s;}
-  .input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(249,115,22,.1);}
-  .input::placeholder{color:var(--gray5);}
-  .select{appearance:none;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:32px;}
+  .input{width:100%;background:#fff;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 13px;font-size:14px;outline:none;transition:.15s;font-family:'Inter',sans-serif;}
+  .input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(184,117,26,.1);}
+  .input::placeholder{color:var(--gray4);}
+  .select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:32px;}
   label{display:block;font-size:12px;color:var(--gray4);margin-bottom:5px;font-weight:500;}
   .form-group{margin-bottom:14px;}
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
   /* ===== SEARCH ===== */
   .search-wrap{position:relative;margin-bottom:14px;}
-  .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gray5);}
+  .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gray4);}
   .search-wrap .input{padding-left:36px;}
 
   /* ===== CART ===== */
   .cart-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
   .cart-item:last-child{border-bottom:none;}
-  .cart-item-name{flex:1;font-size:13px;}
+  .cart-item-name{flex:1;font-size:13px;color:var(--text);}
   .cart-item-qty{width:65px;text-align:center;}
-  .cart-item-price{font-size:13px;color:var(--orange);white-space:nowrap;width:90px;text-align:right;}
+  .cart-item-price{font-size:13px;color:var(--primary);white-space:nowrap;width:90px;text-align:right;}
 
   /* ===== BAR CHART ===== */
   .bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;padding:0 4px;}
   .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-  .bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(to top,var(--orange),var(--yellow));min-height:4px;transition:.4s;}
-  .bar-label{font-size:9px;color:var(--gray5);}
+  .bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(to top,var(--primary),var(--accent));min-height:4px;transition:.4s;}
+  .bar-label{font-size:9px;color:var(--gray4);}
   .bar-val{font-size:9px;color:var(--gray4);}
 
   /* ===== MODAL ===== */
-  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:16px;}
+  .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(26,21,18,.45);z-index:100;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);}
   .modal-backdrop.open{display:flex;}
-  .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;}
-  .modal-title{font-size:17px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-md);}
+  .modal-title{font-size:17px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;color:var(--text);}
 
   /* ===== PRODUCT LIST ===== */
   .product-list{display:grid;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px;}
   .product-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 13px;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:space-between;}
-  .product-card:hover{border-color:var(--orange);background:rgba(249,115,22,.05);}
-  .product-card-name{font-size:13px;font-weight:500;}
-  .product-card-meta{font-size:11px;color:var(--gray5);margin-top:2px;}
-  .product-card-price{font-size:14px;font-weight:700;color:var(--orange);white-space:nowrap;}
+  .product-card:hover{border-color:var(--primary);background:var(--primary-light);}
+  .product-card-name{font-size:13px;font-weight:500;color:var(--text);}
+  .product-card-meta{font-size:11px;color:var(--gray4);margin-top:2px;}
+  .product-card-price{font-size:14px;font-weight:700;color:var(--primary);white-space:nowrap;}
 
   /* ===== PAYMENT METHODS ===== */
   .pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-  .pay-btn{padding:8px 4px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--gray4);font-size:12px;cursor:pointer;text-align:center;transition:.15s;}
-  .pay-btn.active{border-color:var(--orange);background:rgba(249,115,22,.12);color:var(--orange);}
+  .pay-btn{padding:8px 4px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--gray4);font-size:12px;cursor:pointer;text-align:center;transition:.15s;}
+  .pay-btn.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary);}
 
   /* ===== ACCOUNT HISTORY ===== */
-  .history-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;}
+  .history-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text);}
 
   /* ===== NOTIFICATIONS ===== */
-  #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;z-index:999;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;}
+  #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;z-index:999;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-md);}
   #toast.show{opacity:1;}
   #toast.success{border-color:var(--green);color:var(--green);}
   #toast.error{border-color:var(--red);color:var(--red);}
+  /* Agent cards */
+  .agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+  .agent-card{display:flex;flex-direction:column;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow-sm);}
+  .agent-header{display:flex;align-items:flex-start;gap:10px;}
+  .agent-icon{width:36px;height:36px;background:var(--primary-light);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;}
+  .agent-name{font-size:14px;font-weight:700;color:var(--text);}
+  .agent-tag{font-size:11px;color:var(--green);font-weight:600;}
+  .agent-desc{font-size:13px;color:var(--text-secondary);line-height:1.55;margin:0;}
+  .agent-solves{list-style:none;display:flex;flex-direction:column;gap:5px;flex:1;padding:0;margin:0;}
+  .agent-solves li{font-size:12px;color:var(--gray4);padding-left:14px;position:relative;line-height:1.45;}
+  .agent-solves li::before{content:'→';position:absolute;left:0;color:var(--primary);font-weight:700;}
 
   /* ===== RESPONSIVE ===== */
   @media(max-width:768px){
@@ -188,9 +209,9 @@
 
   /* scrollbar */
   ::-webkit-scrollbar{width:5px;height:5px;}
-  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-track{background:transparent;}
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
-  ::-webkit-scrollbar-thumb:hover{background:var(--gray5);}
+  ::-webkit-scrollbar-thumb:hover{background:var(--gray4);}
 </style>
 </head>
 <body>
@@ -206,8 +227,8 @@
         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="logoGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#F97316"/>
-              <stop offset="100%" stop-color="#EAB308"/>
+              <stop offset="0%" stop-color="#B8751A"/>
+              <stop offset="100%" stop-color="#2D5F7A"/>
             </linearGradient>
           </defs>
           <rect width="36" height="36" rx="9" fill="url(#logoGrad)"/>
@@ -250,6 +271,10 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
         <span class="nav-label">Órdenes de Compra</span>
       </button>
+      <button class="nav-item" onclick="showPage('agentes')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+        <span class="nav-label">Agentes IA</span>
+      </button>
     </nav>
     <div style="padding:12px 16px 16px;border-top:1px solid var(--border);margin-top:auto;">
       <a href="https://yustalabs-web.vercel.app" target="_blank" rel="noopener" style="font-size:11px;color:var(--gray5);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--gray5)'">
@@ -273,7 +298,7 @@
             Nueva Venta
           </button>
           <button class="btn btn-secondary btn-sm" onclick="showPage('caja')">
-            💰 Ver Caja del Día
+            Ver Caja del Dia
           </button>
         </div>
       </div>
@@ -290,7 +315,7 @@
           </div>
         </div>
         <div class="card" id="dash-low-stock-card" style="margin-bottom:20px;">
-          <div class="section-title">⚠️ Stock Crítico</div>
+          <div class="section-title">Stock Critico</div>
           <div id="dash-low-stock"></div>
         </div>
         <div class="card">
@@ -472,6 +497,8 @@
         </div>
       </div>
     </div>
+    <!-- AGENTES IA -->
+    <div id="page-agentes" class="page"></div>
   </main>
 
   <!-- BOTTOM NAV (mobile) -->
@@ -891,19 +918,19 @@ function getDefaultClientes() {
 
 function getDefaultPresupuestos() {
   const today = new Date();
-  const fmt = d => d.toISOString().split('T')[0];
+  const fmtDate = d => d.toISOString().split('T')[0];
   const addDays = (d,n) => { const r=new Date(d); r.setDate(r.getDate()+n); return r; };
   return [
-    {id:'P-0001',clienteId:'C001',clienteNombre:'Construcciones Ferreyra SRL',fecha:fmt(addDays(today,-5)),validez:fmt(addDays(today,25)),estado:'pendiente',items:[
+    {id:'P-0001',clienteId:'C001',clienteNombre:'Construcciones Ferreyra SRL',fecha:fmtDate(addDays(today,-5)),validez:fmtDate(addDays(today,25)),estado:'pendiente',items:[
       {productoId:'P002',nombre:'Caño PVC 110mm × 3m',cantidad:10,unidad:'unidad',precio:4200,subtotal:42000},
       {productoId:'P007',nombre:'Codo PVC 110mm',cantidad:20,unidad:'unidad',precio:850,subtotal:17000},
       {productoId:'P009',nombre:'Rejilla de Inspección PVC 150x150',cantidad:5,unidad:'unidad',precio:1900,subtotal:9500},
     ],total:68500,notas:'Incluye IVA. Entrega en 48hs.'},
-    {id:'P-0002',clienteId:'C002',clienteNombre:'Plomería Sánchez e Hijos',fecha:fmt(addDays(today,-2)),validez:fmt(addDays(today,28)),estado:'pendiente',items:[
+    {id:'P-0002',clienteId:'C002',clienteNombre:'Plomería Sánchez e Hijos',fecha:fmtDate(addDays(today,-2)),validez:fmtDate(addDays(today,28)),estado:'pendiente',items:[
       {productoId:'P011',nombre:'Interruptor Simple 10A',cantidad:20,unidad:'unidad',precio:1400,subtotal:28000},
       {productoId:'P004',nombre:'Cable Unipolar 2.5mm²',cantidad:2,unidad:'rollo',precio:38000,subtotal:76000},
     ],total:104000,notas:''},
-    {id:'P-0003',clienteId:'C003',clienteNombre:'Electricidad DM',fecha:fmt(addDays(today,-10)),validez:fmt(addDays(today,20)),estado:'aceptado',items:[
+    {id:'P-0003',clienteId:'C003',clienteNombre:'Electricidad DM',fecha:fmtDate(addDays(today,-10)),validez:fmtDate(addDays(today,20)),estado:'aceptado',items:[
       {productoId:'P012',nombre:'Tablero 6 Bocas con DIF',cantidad:3,unidad:'unidad',precio:28000,subtotal:84000},
       {productoId:'P004',nombre:'Cable Unipolar 2.5mm²',cantidad:3,unidad:'rollo',precio:38000,subtotal:114000},
     ],total:198000,notas:'Aprobado por el cliente el 01/04.'},
@@ -970,6 +997,36 @@ function renderPage(page) {
   else if (page === 'clientes') renderClientes();
   else if (page === 'caja') renderCaja();
   else if (page === 'ordenes') renderOrdenes();
+  else if (page === 'agentes') renderAgentes();
+}
+
+function renderAgentes(){
+  const el=document.getElementById('page-agentes');
+  if(!el)return;
+  const agents=[
+    {icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',tag:'Agente de atención',name:'El Vendedor Virtual',desc:'¿Tienen tornillos 1/4"? ¿Cuánto sale el taladro Bosch? El agente consulta el stock y los precios en tiempo real y responde al cliente al instante.',solves:['Presupuestos que no mandás a tiempo y pierde la venta','Clientes que esperan respuesta mientras atendés en el mostrador','Consultas de precios fuera del horario comercial']},
+    {icon:'<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>',tag:'Agente de cobros',name:'El Cobrador',desc:'Clientes con cuenta corriente o cuotas. El agente envía el estado de cuenta, hace los recordatorios y registra cada pago — sin que vos tengas que llevar la planilla.',solves:['Empresas B2B que acumulan cuenta corriente sin pagar','Horas perdidas persiguiendo cobros a mano','Planillas de CC desactualizadas']},
+    {icon:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>',tag:'Agente de stock',name:'El Almacenero',desc:'Clavos, tornillos, pinturas, herramientas eléctricas. El agente monitorea miles de SKUs y genera órdenes de compra automáticas cuando bajan del mínimo.',solves:['Quedarte sin tornillos 1/4 justo cuando te piden 500','Stock de productos clave sin seguimiento','Compras de emergencia a precio de lista']},
+    {icon:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',tag:'Agente de datos',name:'El Analista',desc:'Productos más vendidos, márgenes por categoría, ventas por proveedor, rotación de inventario. Tu informe de rentabilidad llega cada semana.',solves:['No saber qué productos te dejan más margen real','Inventario inmovilizado en productos de baja rotación','Decisiones de precios sin datos de costo real']},
+    {icon:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',tag:'Agente de contenido',name:'El Promotor',desc:'Ofertas de temporada, liquidaciones de stock, novedades de línea. Comunicaciones que llegan directo al WhatsApp de tus clientes B2B y B2C.',solves:['Publicar nuevos productos y ofertas sin tiempo para hacerlo','Clientes que no saben de tus promociones de stock','Ventas perdidas por falta de comunicación con la base de clientes']},
+    {icon:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',tag:'Agente de retención',name:'El Fidelizador',desc:'Clientes que compraron hace más de 45 días. El agente los contacta con una oferta personalizada basada en su historial de compras — no un mensaje genérico.',solves:['Clientes frecuentes que dejaron de comprar','Volumen de ventas irregular mes a mes','Clientes B2B que migran a la competencia en silencio']}
+  ];
+  el.innerHTML=`<div style="padding:20px 0 0"><div class="topbar"><div><div class="page-title">Agentes IA</div><div class="page-subtitle">Empleados virtuales de tu ferreteria</div></div></div>
+<div style="padding:0 20px">
+<div style="display:flex;align-items:center;gap:16px;margin:16px 0 20px;padding:14px 18px;background:var(--primary-light);border-radius:10px;border-left:4px solid var(--primary)">
+  <div style="font-size:13px;font-weight:600;color:var(--primary)">6 agentes activos</div>
+  <div style="width:1px;height:16px;background:var(--primary);opacity:.3"></div>
+  <div style="font-size:13px;color:var(--text-secondary)">Automatizando atención, cobros, stock, análisis y fidelización</div>
+</div>
+<div class="agents-grid">${agents.map(a=>`<div class="agent-card">
+  <div class="agent-header">
+    <div class="agent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">${a.icon}</svg></div>
+    <div><div class="agent-tag">${a.tag}</div><div class="agent-name">${a.name}</div></div>
+  </div>
+  <p class="agent-desc">${a.desc}</p>
+  <ul class="agent-solves">${a.solves.map(s=>`<li>${s}</li>`).join('')}</ul>
+  <button class="btn btn-primary" style="margin-top:4px;width:100%">Ver en accion</button>
+</div>`).join('')}</div></div></div>`;
 }
 
 // =========================================================
@@ -1690,7 +1747,7 @@ function printPriceList() {
     <tr>
       <td>${p.nombre}</td>
       <td>${p.categoria}</td>
-      <td style="text-align:right;font-weight:600;">$${Number(p.precio).toLocaleString('es-AR')}</td>
+      <td style="text-align:right;font-weight:600;">${fmt(p.precio)}</td>
       <td style="text-align:right;">${p.stock} ${p.unidad}</td>
     </tr>
   `).join('');
